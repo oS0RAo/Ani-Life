@@ -1,4 +1,6 @@
+import { useState } from "react";
 import type { Anime } from "../types/anime";
+import SeasonSelector from "../components/SeasonSelector";
 
 interface HomeProps {
   animeList: Anime[];
@@ -6,11 +8,20 @@ interface HomeProps {
 }
 
 export default function Home({ animeList, onSelect }: HomeProps) {
+  const [selectedSeason, setSelectedSeason] = useState("All");
+
+  const filtered =
+    selectedSeason === "All"
+      ? animeList
+      : animeList.filter((a) => a.season === selectedSeason);
+
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-4 text-white">All Anime</h1>
+      <h1 className="text-3xl font-bold mb-4 text-white">Anime List</h1>
+      <SeasonSelector onSelect={(s) => setSelectedSeason(s)} />
+
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-        {animeList.map((anime) => (
+        {filtered.map((anime) => (
           <div
             key={anime.id}
             className="bg-gray-800 rounded-lg overflow-hidden cursor-pointer hover:scale-105 transition transform"
@@ -27,6 +38,12 @@ export default function Home({ animeList, onSelect }: HomeProps) {
             </div>
           </div>
         ))}
+
+        {filtered.length === 0 && (
+          <p className="text-gray-400 text-center col-span-full mt-6">
+            ไม่มีอนิเมะในซีซันนี้
+          </p>
+        )}
       </div>
     </div>
   );
