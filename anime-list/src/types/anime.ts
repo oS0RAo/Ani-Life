@@ -7,4 +7,5 @@ export interface Anime {
   image: string;
   description: string;
   season?: string;
+  isFavorite?: boolean;
 }

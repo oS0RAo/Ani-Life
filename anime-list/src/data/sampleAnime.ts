@@ -1,3 +1,5 @@
+import type { Anime } from "../types/anime";
+
 export const sampleAnime: Anime[] = [
   {
     id: 1,

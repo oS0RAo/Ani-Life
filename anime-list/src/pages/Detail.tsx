@@ -1,12 +1,13 @@
-import Tag from "../components/Tag";
 import type { Anime } from "../types/anime";
+import Tag from "../components/Tag";
 
 interface DetailProps {
   anime: Anime;
   goBack: () => void;
+  toggleFavorite: (anime: Anime) => void;
 }
 
-export default function Detail({ anime, goBack }: DetailProps) {
+export default function Detail({ anime, goBack, toggleFavorite }: DetailProps) {
   return (
     <div className="text-white">
       <button onClick={goBack} className="text-blue-400 mb-4 hover:underline">
@@ -30,6 +31,17 @@ export default function Detail({ anime, goBack }: DetailProps) {
           </div>
 
           <p className="mt-4 text-gray-300">{anime.description}</p>
+
+          <button
+            onClick={() => toggleFavorite(anime)}
+            className={`mt-6 px-4 py-2 rounded-md font-medium transition ${
+              anime.isFavorite
+                ? "bg-red-600 hover:bg-red-700"
+                : "bg-blue-600 hover:bg-blue-700"
+            }`}
+          >
+            {anime.isFavorite ? "Remove from My List" : "Add to My List"}
+          </button>
         </div>
       </div>
     </div>
