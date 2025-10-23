@@ -27,6 +27,17 @@ const BROADCAST_DAYS = [
   "อาทิตย์",
 ];
 
+const PLATFORM_OPTIONS = [
+  "Netflix",
+  "Bilibili",
+  "Crunchyroll",
+  "Muse Thailand",
+  "Ani-One Asia",
+  "Disney+ Hotstar",
+  "YouTube",
+  "กำหนดเอง",
+];
+
 export default function Admin({ animeList, setAnimeList }: AdminProps) {
   const [newAnime, setNewAnime] = useState<Anime>({
     id: animeList.length + 1,
@@ -38,10 +49,48 @@ export default function Admin({ animeList, setAnimeList }: AdminProps) {
     description: "",
     season: SEASONS[0],
     broadcastDay: BROADCAST_DAYS[0],
+    platforms: [],
+  });
+
+  const [newPlatform, setNewPlatform] = useState({
+    name: "",
+    customName: "",
+    episodes: [] as any[],
+  });
+  const [newEpisode, setNewEpisode] = useState({
+    title: "",
+    url: "",
+    description: "",
+    thumbnail: "",
   });
 
   const handleChange = (field: keyof Anime, value: any) => {
     setNewAnime((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const addEpisode = () => {
+    if (!newEpisode.title.trim() || !newEpisode.url.trim())
+      return alert("กรุณากรอกชื่อและลิงก์ตอน");
+
+    setNewPlatform((prev) => ({
+      ...prev,
+      episodes: [...prev.episodes, newEpisode],
+    }));
+    setNewEpisode({ title: "", url: "", description: "", thumbnail: "" });
+  };
+
+  const addPlatform = () => {
+    const platformName =
+      newPlatform.name === "กำหนดเอง" ? newPlatform.customName : newPlatform.name;
+
+    if (!platformName.trim()) return alert("กรุณากรอกชื่อแพลตฟอร์ม");
+
+    setNewAnime((prev) => ({
+      ...prev,
+      platforms: [...(prev.platforms || []), { ...newPlatform, name: platformName }],
+    }));
+
+    setNewPlatform({ name: "", customName: "", episodes: [] });
   };
 
   const addAnime = () => {
@@ -61,6 +110,7 @@ export default function Admin({ animeList, setAnimeList }: AdminProps) {
       description: "",
       season: SEASONS[0],
       broadcastDay: BROADCAST_DAYS[0],
+      platforms: [],
     });
   };
 
@@ -77,7 +127,7 @@ export default function Admin({ animeList, setAnimeList }: AdminProps) {
         ⚙️ ระบบจัดการอนิเมะ (Admin)
       </h1>
 
-      {/* 🆕 ฟอร์มเพิ่มอนิเมะ */}
+      {/* ฟอร์มเพิ่มอนิเมะ */}
       <div className="bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
         <h2 className="text-xl font-semibold mb-4">เพิ่มอนิเมะใหม่</h2>
 
@@ -87,17 +137,15 @@ export default function Admin({ animeList, setAnimeList }: AdminProps) {
             placeholder="ชื่ออนิเมะ"
             value={newAnime.title}
             onChange={(e) => handleChange("title", e.target.value)}
-            className="p-2 rounded bg-gray-700 focus:outline-none"
+            className="p-2 rounded bg-gray-700"
           />
           <input
             type="number"
             placeholder="ปีที่ออกฉาย"
             value={newAnime.year}
             onChange={(e) => handleChange("year", Number(e.target.value))}
-            className="p-2 rounded bg-gray-700 focus:outline-none"
+            className="p-2 rounded bg-gray-700"
           />
-
-          {/* ✅ dropdown genre */}
           <select
             value={newAnime.genre}
             onChange={(e) => handleChange("genre", e.target.value)}
@@ -107,8 +155,6 @@ export default function Admin({ animeList, setAnimeList }: AdminProps) {
               <option key={g}>{g}</option>
             ))}
           </select>
-
-          {/* ✅ dropdown season */}
           <select
             value={newAnime.season}
             onChange={(e) => handleChange("season", e.target.value)}
@@ -118,19 +164,14 @@ export default function Admin({ animeList, setAnimeList }: AdminProps) {
               <option key={s}>{s}</option>
             ))}
           </select>
-
           <input
             type="number"
             step="0.1"
-            placeholder="กรอกคะแนน (0–10)"
+            placeholder="คะแนน (0–10)"
             value={newAnime.rating === 0 ? "" : newAnime.rating}
             onChange={(e) => handleChange("rating", Number(e.target.value))}
-            className="p-2 rounded bg-gray-700 focus:outline-none"
-            min={0}
-            max={10}
+            className="p-2 rounded bg-gray-700"
           />
-
-          {/* ✅ dropdown วันที่ฉาย */}
           <select
             value={newAnime.broadcastDay}
             onChange={(e) => handleChange("broadcastDay", e.target.value)}
@@ -140,39 +181,125 @@ export default function Admin({ animeList, setAnimeList }: AdminProps) {
               <option key={day}>{day}</option>
             ))}
           </select>
-
           <input
             type="text"
             placeholder="ลิงก์รูปภาพ"
             value={newAnime.image}
             onChange={(e) => handleChange("image", e.target.value)}
-            className="p-2 rounded bg-gray-700 focus:outline-none col-span-full"
+            className="p-2 rounded bg-gray-700 col-span-full"
           />
-
           <textarea
             placeholder="คำอธิบาย"
             value={newAnime.description}
             onChange={(e) => handleChange("description", e.target.value)}
-            className="p-2 rounded bg-gray-700 focus:outline-none col-span-full"
+            className="p-2 rounded bg-gray-700 col-span-full"
           />
+        </div>
+
+        {/*  เพิ่มแพลตฟอร์ม */}
+        <div className="mt-6 bg-gray-700 p-4 rounded-lg">
+          <h3 className="font-semibold mb-2">เพิ่มแพลตฟอร์ม</h3>
+
+          <select
+            value={newPlatform.name}
+            onChange={(e) => setNewPlatform((p) => ({ ...p, name: e.target.value }))}
+            className="p-2 rounded bg-gray-800 w-full mb-2"
+          >
+            <option value="">เลือกแพลตฟอร์ม</option>
+            {PLATFORM_OPTIONS.map((p) => (
+              <option key={p} value={p}>
+                {p}
+              </option>
+            ))}
+          </select>
+
+          {newPlatform.name === "กำหนดเอง" && (
+            <input
+              type="text"
+              placeholder="กรอกชื่อแพลตฟอร์มเอง"
+              value={newPlatform.customName}
+              onChange={(e) =>
+                setNewPlatform((p) => ({ ...p, customName: e.target.value }))
+              }
+              className="p-2 rounded bg-gray-800 w-full mb-2"
+            />
+          )}
+
+          {/* เพิ่มตอน */}
+          <div className="bg-gray-800 p-3 rounded mb-3">
+            <h4 className="text-sm mb-2 font-semibold text-blue-300">เพิ่มตอน</h4>
+            <input
+              type="text"
+              placeholder="ชื่อตอน"
+              value={newEpisode.title}
+              onChange={(e) =>
+                setNewEpisode((ep) => ({ ...ep, title: e.target.value }))
+              }
+              className="p-2 rounded bg-gray-700 w-full mb-2"
+            />
+            <input
+              type="text"
+              placeholder="ลิงก์ตอน"
+              value={newEpisode.url}
+              onChange={(e) =>
+                setNewEpisode((ep) => ({ ...ep, url: e.target.value }))
+              }
+              className="p-2 rounded bg-gray-700 w-full mb-2"
+            />
+            <input
+              type="text"
+              placeholder="ลิงก์รูปตัวอย่าง (thumbnail)"
+              value={newEpisode.thumbnail}
+              onChange={(e) =>
+                setNewEpisode((ep) => ({ ...ep, thumbnail: e.target.value }))
+              }
+              className="p-2 rounded bg-gray-700 w-full mb-2"
+            />
+            <textarea
+              placeholder="คำอธิบายตอน"
+              value={newEpisode.description}
+              onChange={(e) =>
+                setNewEpisode((ep) => ({ ...ep, description: e.target.value }))
+              }
+              className="p-2 rounded bg-gray-700 w-full mb-2"
+            />
+            <button
+              onClick={addEpisode}
+              className="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded"
+            >
+              ➕ เพิ่มตอน
+            </button>
+          </div>
+
+          {newPlatform.episodes.length > 0 && (
+            <ul className="text-sm text-gray-300 mb-2">
+              {newPlatform.episodes.map((ep, i) => (
+                <li key={i}>• {ep.title}</li>
+              ))}
+            </ul>
+          )}
+
+          <button
+            onClick={addPlatform}
+            className="bg-green-600 hover:bg-green-700 px-4 py-1 rounded"
+          >
+            ➕ เพิ่มแพลตฟอร์ม
+          </button>
         </div>
 
         <button
           onClick={addAnime}
           className="mt-4 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md font-medium"
         >
-          ➕ เพิ่มอนิเมะ
+          ✅ เพิ่มอนิเมะ
         </button>
       </div>
 
-      {/* รายการอนิเมะที่มีอยู่ */}
-      <h2 className="text-xl font-semibold mb-3">📜 รายการทั้งหมด</h2>
+      {/* รายการอนิเมะ */}
+      <h2 className="text-xl font-semibold mb-3">รายการทั้งหมด</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {animeList.map((anime) => (
-          <div
-            key={anime.id}
-            className="bg-gray-800 rounded-lg p-4 shadow-md flex flex-col"
-          >
+          <div key={anime.id} className="bg-gray-800 rounded-lg p-4 shadow-md">
             <img
               src={anime.image}
               alt={anime.title}
@@ -182,8 +309,19 @@ export default function Admin({ animeList, setAnimeList }: AdminProps) {
             <p className="text-sm text-gray-400">
               {anime.genre} • {anime.season} • {anime.broadcastDay}
             </p>
-            <p className="text-sm text-gray-500">⭐ {anime.rating}</p>
 
+            {anime.platforms && anime.platforms.length > 0 && (
+              <div className="text-gray-300 text-sm mt-2 space-y-1">
+                <p className="font-semibold text-blue-300">แพลตฟอร์ม:</p>
+                {anime.platforms.map((p, i) => (
+                  <p key={i}>
+                    • {p.name} — {p.episodes?.length || 0} ตอน
+                  </p>
+                ))}
+              </div>
+            )}
+
+            <p className="text-sm text-gray-500 mt-2">⭐ {anime.rating}</p>
             <button
               onClick={() => deleteAnime(anime.id)}
               className="mt-3 bg-red-600 hover:bg-red-700 px-3 py-1 rounded-md text-sm"

@@ -17,6 +17,13 @@ export default function Detail({ anime, goBack, toggleFavorite }: DetailProps) {
     setCurrentAnime(anime);
   }, [anime]);
 
+  useEffect(() => {
+  if (currentAnime.platforms && currentAnime.platforms.length > 0 && !selectedPlatform) {
+      setSelectedPlatform(currentAnime.platforms[0].name);
+    }
+  }, [currentAnime, selectedPlatform]);
+
+
   const handleToggle = () => {
     toggleFavorite(currentAnime);
     setCurrentAnime((prev) => ({ ...prev, isFavorite: !prev.isFavorite }));
