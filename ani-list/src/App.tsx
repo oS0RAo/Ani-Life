@@ -5,7 +5,7 @@ import Browse from "./pages/Browse";
 import Detail from "./pages/Detail";
 import MyList from "./pages/MyList";
 import Admin from "./pages/Admin";
-import Schedule from "./pages/Schedule"; // ✅ import หน้าใหม่
+import Schedule from "./pages/Schedule";
 import type { Anime } from "./types/anime";
 import { sampleAnime } from "./data/sampleAnime";
 
@@ -18,6 +18,7 @@ function App() {
   const [selectedAnime, setSelectedAnime] = useState<Anime | null>(null);
 
   useEffect(() => {
+    document.title = "Ani Life";
     const saved = localStorage.getItem("animeList");
     if (saved) setAnimeList(JSON.parse(saved));
     else setAnimeList(sampleAnime);
@@ -75,14 +76,16 @@ function App() {
       case "admin":
         return <Admin animeList={animeList} setAnimeList={setAnimeList} />;
       case "schedule":
-        return (
-          <Schedule
-            onSelect={(a) => {
-              setSelectedAnime(a);
-              setCurrentPage("detail");
-            }}
-          />
-        );
+    return (
+      <Schedule
+        animeList={animeList}
+        onSelect={(a) => {
+          setSelectedAnime(a);
+          setCurrentPage("detail");
+        }}
+      />
+    );
+
     }
   };
 

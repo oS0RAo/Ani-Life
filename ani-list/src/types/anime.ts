@@ -8,4 +8,5 @@ export interface Anime {
   description: string;
   season?: string;
   isFavorite?: boolean;
+  broadcastDay?: string;
 }
