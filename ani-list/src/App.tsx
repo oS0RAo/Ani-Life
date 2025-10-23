@@ -13,16 +13,30 @@ function App() {
   const [currentPage, setCurrentPage] = useState<
     "home" | "browse" | "detail" | "mylist" | "admin" | "schedule"
   >("home");
+  const [previousPage, setPreviousPage] = useState<
+    "home" | "browse" | "mylist" | "schedule" | null
+  >(null);
 
   const [animeList, setAnimeList] = useState<Anime[]>([]);
   const [selectedAnime, setSelectedAnime] = useState<Anime | null>(null);
 
   useEffect(() => {
-    document.title = "Ani Life";
-    const saved = localStorage.getItem("animeList");
-    if (saved) setAnimeList(JSON.parse(saved));
-    else setAnimeList(sampleAnime);
-  }, []);
+  document.title = "Ani Life";
+  const saved = localStorage.getItem("animeList");
+  if (saved) {
+    const parsed = JSON.parse(saved);
+    // ถ้าไม่มี fields ใหม่ ให้โหลด sampleAnime ใหม่แทน
+    if (!parsed[0]?.trailerUrl || !parsed[0]?.platforms || !parsed[0]?.characters) {
+      setAnimeList(sampleAnime);
+      localStorage.setItem("animeList", JSON.stringify(sampleAnime));
+    } else {
+      setAnimeList(parsed);
+    }
+  } else {
+    setAnimeList(sampleAnime);
+  }
+}, []);
+
 
   const toggleFavorite = (anime: Anime) => {
     const updated = animeList.map((a) =>
@@ -31,61 +45,43 @@ function App() {
     setAnimeList(updated);
   };
 
+  const goToDetail = (a: Anime, from: Exclude<typeof currentPage, "detail" | "admin">) => {
+    setPreviousPage(from);
+    setSelectedAnime(a);
+    setCurrentPage("detail");
+  };
+
+
   const showPage = () => {
     switch (currentPage) {
       case "home":
-        return (
-          <Home
-            animeList={animeList}
-            onSelect={(a) => {
-              setSelectedAnime(a);
-              setCurrentPage("detail");
-            }}
-          />
-        );
+        return <Home animeList={animeList} onSelect={(a) => goToDetail(a, "home")} />;
+
       case "browse":
-        return (
-          <Browse
-            animeList={animeList}
-            onSelect={(a) => {
-              setSelectedAnime(a);
-              setCurrentPage("detail");
-            }}
-          />
-        );
+        return <Browse animeList={animeList} onSelect={(a) => goToDetail(a, "browse")} />;
+
       case "detail":
         return selectedAnime ? (
           <Detail
             anime={selectedAnime}
-            goBack={() => setCurrentPage("home")}
+            goBack={() => setCurrentPage(previousPage ?? "home")}
             toggleFavorite={toggleFavorite}
           />
         ) : (
           <p className="text-white">ไม่พบข้อมูล</p>
         );
+
       case "mylist":
-        return (
-          <MyList
-            animeList={animeList}
-            onSelect={(a) => {
-              setSelectedAnime(a);
-              setCurrentPage("detail");
-            }}
-          />
-        );
+        return <MyList animeList={animeList} onSelect={(a) => goToDetail(a, "mylist")} />;
+
       case "admin":
         return <Admin animeList={animeList} setAnimeList={setAnimeList} />;
-      case "schedule":
-    return (
-      <Schedule
-        animeList={animeList}
-        onSelect={(a) => {
-          setSelectedAnime(a);
-          setCurrentPage("detail");
-        }}
-      />
-    );
 
+      case "schedule":
+        return <Schedule animeList={animeList} onSelect={(a) => goToDetail(a, "schedule")} />;
+
+      default:
+        return null;
     }
   };
 
