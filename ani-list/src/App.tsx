@@ -20,24 +20,41 @@ function App() {
   const [animeList, setAnimeList] = useState<Anime[]>([]);
   const [selectedAnime, setSelectedAnime] = useState<Anime | null>(null);
 
+  // โหลดข้อมูลครั้งแรก
   useEffect(() => {
-  document.title = "Ani Life";
-  const saved = localStorage.getItem("animeList");
-  if (saved) {
-    const parsed = JSON.parse(saved);
-    // ถ้าไม่มี fields ใหม่ ให้โหลด sampleAnime ใหม่แทน
-    if (!parsed[0]?.trailerUrl || !parsed[0]?.platforms || !parsed[0]?.characters) {
+    document.title = "Ani Life";
+
+    try {
+      const saved = localStorage.getItem("animeList");
+
+      if (saved) {
+        const parsed: Anime[] = JSON.parse(saved);
+
+        //  ตรวจสอบว่ามีข้อมูลจริงไหม (ไม่ใช่ [])
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setAnimeList(parsed);
+          return; // ใช้ข้อมูลที่เคยบันทึกไว้
+        }
+      }
+
+      //  ถ้าไม่มีข้อมูลใน localStorage ให้ใช้ข้อมูลใน sampleAnime
       setAnimeList(sampleAnime);
       localStorage.setItem("animeList", JSON.stringify(sampleAnime));
-    } else {
-      setAnimeList(parsed);
+    } catch (err) {
+      console.error("โหลดข้อมูล animeList ล้มเหลว:", err);
+      setAnimeList(sampleAnime);
+      localStorage.setItem("animeList", JSON.stringify(sampleAnime));
     }
-  } else {
-    setAnimeList(sampleAnime);
-  }
-}, []);
+  }, []);
 
+  // อัปเดต localStorage ทุกครั้งที่ animeList เปลี่ยน
+  useEffect(() => {
+    if (animeList.length > 0) {
+      localStorage.setItem("animeList", JSON.stringify(animeList));
+    }
+  }, [animeList]);
 
+  // toggle favorite
   const toggleFavorite = (anime: Anime) => {
     const updated = animeList.map((a) =>
       a.id === anime.id ? { ...a, isFavorite: !a.isFavorite } : a
@@ -45,20 +62,31 @@ function App() {
     setAnimeList(updated);
   };
 
-  const goToDetail = (a: Anime, from: Exclude<typeof currentPage, "detail" | "admin">) => {
+  // เปิดหน้า Detail
+  const goToDetail = (
+    a: Anime,
+    from: Exclude<typeof currentPage, "detail" | "admin">
+  ) => {
     setPreviousPage(from);
     setSelectedAnime(a);
     setCurrentPage("detail");
   };
 
-
+  // ส่วนการแสดงแต่ละหน้า
   const showPage = () => {
     switch (currentPage) {
       case "home":
-        return <Home animeList={animeList} onSelect={(a) => goToDetail(a, "home")} />;
+        return (
+          <Home animeList={animeList} onSelect={(a) => goToDetail(a, "home")} />
+        );
 
       case "browse":
-        return <Browse animeList={animeList} onSelect={(a) => goToDetail(a, "browse")} />;
+        return (
+          <Browse
+            animeList={animeList}
+            onSelect={(a) => goToDetail(a, "browse")}
+          />
+        );
 
       case "detail":
         return selectedAnime ? (
@@ -72,13 +100,23 @@ function App() {
         );
 
       case "mylist":
-        return <MyList animeList={animeList} onSelect={(a) => goToDetail(a, "mylist")} />;
+        return (
+          <MyList
+            animeList={animeList}
+            onSelect={(a) => goToDetail(a, "mylist")}
+          />
+        );
 
       case "admin":
         return <Admin animeList={animeList} setAnimeList={setAnimeList} />;
 
       case "schedule":
-        return <Schedule animeList={animeList} onSelect={(a) => goToDetail(a, "schedule")} />;
+        return (
+          <Schedule
+            animeList={animeList}
+            onSelect={(a) => goToDetail(a, "schedule")}
+          />
+        );
 
       default:
         return null;
