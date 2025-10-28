@@ -13,6 +13,7 @@ export interface Platform {
 }
 
 export interface Character {
+  id: number;
   name: string;
   role: string;
   image: string;
@@ -30,6 +31,6 @@ export interface Anime {
   isFavorite?: boolean;
   broadcastDay?: string;
   trailerUrl?: string;
-  platforms?: Platform[];
+  platforms: Platform[];
   characters?: Character[];
 }
