@@ -1,18 +1,38 @@
 import type { Anime } from "../types/anime";
 
 interface Props {
+  // ข้อมูลอนิเมะแต่ละเรื่องที่จะนำมาแสดงในการ์ด
   anime: Anime;
+  // ฟังก์ชัน Callback ที่จะถูกเรียกเมื่อผู้ใช้คลิกที่การ์ด
+  // โดยจะส่ง Object ข้อมูลอนิเมะกลับไปยังคอมโพเนนต์แม่
   onSelect: (anime: Anime) => void;
 }
 
 export default function AnimeCard({ anime, onSelect }: Props) {
   return (
+    // เมื่อมีการคลิก onClick จะเรียกใช้ฟังก์ชัน onSelect โดยส่งข้อมูลอนิเมะปัจจุบันเข้าไป
     <div onClick={() => onSelect(anime)} className="bg-white rounded-lg shadow hover:shadow-lg transition cursor-pointer">
-      <img src={anime.image} alt={anime.title} className="rounded-t-lg h-60 w-full object-cover" />
+
+      {/* ส่วนรูปภาพปกอนิเมะ */}
+      <img 
+        // รูปภาพดึงจาก anime.image
+        src={anime.image} 
+        // ข้อความ ดึงจาก anime.title
+        alt={anime.title} 
+        // ทำให้ขอบบนโค้งมน, กำหนดความสูงและความกว้าง, การครอบตัดรูปภาพ
+        className="rounded-t-lg h-60 w-full object-cover" 
+      />
+      
+      {/* ส่วนเนื้อหาของการ์ด */}
       <div className="p-3">
+        {/* ชื่อเรื่องอนิเมะ */}
         <h3 className="font-semibold text-lg">{anime.title}</h3>
+        
+        {/* แนว และปีที่ออกฉาย */}
         <p className="text-sm text-gray-500">{anime.genre} • {anime.year}</p>
-        <p className="text-yellow-600 font-medium mt-1">⭐ {anime.rating}</p>
+        
+        {/* คะแนน (Rating) */}
+        <p className="text-yellow-600 font-medium mt-1"> ⭐ {anime.rating}</p>
       </div>
     </div>
   );

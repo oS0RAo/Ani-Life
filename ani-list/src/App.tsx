@@ -6,47 +6,80 @@ import Detail from "./pages/Detail";
 import MyList from "./pages/MyList";
 import Admin from "./pages/Admin";
 import Schedule from "./pages/Schedule";
+// --- 1. IMPORT เพจและ Type ที่จำเป็น ---
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import type { User } from "./types/user"; 
+// ------------------------------------
 import type { Anime } from "./types/anime";
 import { sampleAnime } from "./data/sampleAnime";
 
-interface User {
-  username: string;
-  password: string;
-  role: "user" | "admin";
-}
+// --- (ลบ Interface User ภายใน App.tsx ออก เพราะ Import มาแล้ว) ---
 
 function App() {
+  // สถานะสำหรับ "การเปลี่ยนหน้า"
   const [currentPage, setCurrentPage] = useState<
     "home" | "browse" | "detail" | "mylist" | "admin" | "schedule" | "login" | "register"
   >("login");
+  
+  // สถานะสำหรับเก็บ "หน้าที่แล้ว"
   const [previousPage, setPreviousPage] = useState<
     "home" | "browse" | "mylist" | "schedule" | null
   >(null);
 
+  // สถานะ "รายการอนิเมะทั้งหมด"
   const [animeList, setAnimeList] = useState<Anime[]>([]);
+  
+  // สถานะ "อนิเมะที่ถูกเลือก"
   const [selectedAnime, setSelectedAnime] = useState<Anime | null>(null);
+  
+  // สถานะ "ผู้ใช้ปัจจุบัน"
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
+  // useEffect โหลดข้อมูลอนิเมะ และ "Seed Admin" (ทำงานครั้งเดียว)
   useEffect(() => {
     document.title = "Ani Life";
     try {
+      // (ส่วนโหลด animeList ... เหมือนเดิม)
       const saved = localStorage.getItem("animeList");
       if (saved) {
         const parsed: Anime[] = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
           setAnimeList(parsed);
-          return;
+        } else {
+           // กรณี saved เป็น [] (Array ว่าง)
+          setAnimeList(sampleAnime);
+          localStorage.setItem("animeList", JSON.stringify(sampleAnime));
         }
+      } else {
+        // กรณีไม่มี "animeList" ใน localStorage เลย
+        setAnimeList(sampleAnime);
+        localStorage.setItem("animeList", JSON.stringify(sampleAnime));
       }
-      setAnimeList(sampleAnime);
-      localStorage.setItem("animeList", JSON.stringify(sampleAnime));
     } catch (err) {
       console.error("โหลดข้อมูล animeList ล้มเหลว:", err);
       setAnimeList(sampleAnime);
       localStorage.setItem("animeList", JSON.stringify(sampleAnime));
     }
-  }, []);
 
+    // --- 3. ย้าย LOGIC SEED ADMIN มาไว้ที่นี่ ---
+    // (Logic นี้เคยอยู่ใน handleLogin แต่ Login.tsx ภายนอกไม่มี Logic นี้
+    //  จึงย้ายมาไว้ใน useEffect ที่ทำงานครั้งเดียวตอนเปิดแอป)
+    try {
+      const users: User[] = JSON.parse(localStorage.getItem("users") || "[]");
+      if (!users.find((u) => u.username === "admin")) {
+        users.push({ username: "admin", password: "1234", role: "admin" });
+        localStorage.setItem("users", JSON.stringify(users));
+        console.log("Admin user seeded successfully.");
+      }
+    } catch (err) {
+      console.error("Failed to seed admin user:", err);
+    }
+    // ------------------------------------
+
+  }, []); // [] = ทำงานครั้งเดียว
+
+  // ตรวจสอบ Session ผู้ใช้ (เหมือนเดิม)
   useEffect(() => {
     const savedUser = localStorage.getItem("currentUser");
     if (savedUser) {
@@ -55,13 +88,14 @@ function App() {
     }
   }, []);
 
+  // บันทึก animeList (เหมือนเดิม)
   useEffect(() => {
     if (animeList.length > 0) {
       localStorage.setItem("animeList", JSON.stringify(animeList));
     }
   }, [animeList]);
 
-  // ระบบการกด favorite แยกตาม user
+  // ฟังก์ชัน toggleFavorite (เหมือนเดิม)
   const toggleFavorite = (anime: Anime) => {
     if (!currentUser) return;
 
@@ -75,15 +109,14 @@ function App() {
     allUserFavorites[currentUser.username] = updatedFavs;
     localStorage.setItem("userFavorites", JSON.stringify(allUserFavorites));
 
-    // ✅ อัปเดตสถานะใน animeList ให้สอดคล้องกับ user ปัจจุบัน
     const updatedAnimeList = animeList.map((a) => ({
       ...a,
       isFavorite: updatedFavs.includes(a.id),
     }));
     setAnimeList(updatedAnimeList);
-    localStorage.setItem("animeList", JSON.stringify(updatedAnimeList));
   };
 
+  // ฟังก์ชัน goToDetail (เหมือนเดิม)
   const goToDetail = (
     a: Anime,
     from: Exclude<typeof currentPage, "detail" | "admin" | "login" | "register">
@@ -93,140 +126,65 @@ function App() {
     setCurrentPage("detail");
   };
 
-  const handleRegister = (username: string, password: string) => {
-    const users: User[] = JSON.parse(localStorage.getItem("users") || "[]");
-    if (users.find((u) => u.username === username)) {
-      alert("ชื่อผู้ใช้นี้ถูกใช้แล้ว");
-      return;
-    }
+  // --- (ลบ handleRegister และ handleLogin เก่าออก) ---
+  // (เพราะ Logic การค้นหา/บันทึก user อยู่ใน Login.tsx และ Register.tsx แล้ว)
 
-    const newUser: User = { username, password, role: "user" };
-    users.push(newUser);
-    localStorage.setItem("users", JSON.stringify(users));
-    alert("สมัครสมาชิกสำเร็จ!");
+  // --- สร้างฟังก์ชันใหม่สำหรับส่งให้ Pages ---
+
+  // ฟังก์ชันนี้จะถูกเรียกโดย Login.tsx "หลังจาก" ล็อกอินสำเร็จ
+  const handleLoginSuccess = (user: User) => {
+    setCurrentUser(user); // 1. ตั้งค่า State ผู้ใช้
+    setCurrentPage("home"); // 2. เปลี่ยนหน้าไป Home
+
+    // 3. โหลด Favorite (Logic นี้ย้ายมาจาก handleLogin เดิม)
+    const allUserFavorites = JSON.parse(localStorage.getItem("userFavorites") || "{}");
+    const favIds = allUserFavorites[user.username] || [];
+    const updatedAnimeList = animeList.map((a) => ({
+      ...a,
+      isFavorite: favIds.includes(a.id),
+    }));
+    setAnimeList(updatedAnimeList);
+  };
+
+  // ฟังก์ชันสำหรับให้ Register.tsx เรียกเพื่อกลับไปหน้า Login
+  const goToLogin = () => {
     setCurrentPage("login");
   };
 
-  const handleLogin = (username: string, password: string) => {
-    const users: User[] = JSON.parse(localStorage.getItem("users") || "[]");
-
-    // เพิ่มแอดมินเริ่มต้น
-    if (!users.find((u) => u.username === "admin")) {
-      users.push({ username: "admin", password: "1234", role: "admin" });
-      localStorage.setItem("users", JSON.stringify(users));
-    }
-
-    const found = users.find(
-      (u) => u.username === username && u.password === password
-    );
-    if (found) {
-      setCurrentUser(found);
-      localStorage.setItem("currentUser", JSON.stringify(found));
-      setCurrentPage("home");
-
-      // โหลดสถานะ favorite ของ user
-      const allUserFavorites = JSON.parse(localStorage.getItem("userFavorites") || "{}");
-      const favIds = allUserFavorites[found.username] || [];
-      const updatedAnimeList = animeList.map((a) => ({
-        ...a,
-        isFavorite: favIds.includes(a.id),
-      }));
-      setAnimeList(updatedAnimeList);
-    } else {
-      alert("ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
-    }
+  // ฟังก์ชันสำหรับให้ Login.tsx เรียกเพื่อไปหน้า Register
+  const goToRegister = () => {
+    setCurrentPage("register");
   };
-
+  
+  // ฟังก์ชัน handleLogout (เหมือนเดิม)
   const handleLogout = () => {
     setCurrentUser(null);
     localStorage.removeItem("currentUser");
     setCurrentPage("login");
   };
 
-  const LoginPage = () => {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+  // --- 2. ลบ const LoginPage และ RegisterPage ภายในนี้ออก ---
+  // ( ... โค้ดที่นิยาม LoginPage และ RegisterPage ถูกลบ ... )
 
-    return (
-      <div className="flex flex-col items-center justify-center h-screen text-white">
-        <h1 className="text-3xl font-bold mb-4">เข้าสู่ระบบ Ani Life</h1>
-        <input
-          className="p-2 mb-2 rounded bg-gray-800 w-64"
-          placeholder="ชื่อผู้ใช้"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <input
-          type="password"
-          className="p-2 mb-4 rounded bg-gray-800 w-64"
-          placeholder="รหัสผ่าน"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button
-          onClick={() => handleLogin(username, password)}
-          className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded mb-2"
-        >
-          เข้าสู่ระบบ
-        </button>
-        <p>
-          ยังไม่มีบัญชี?{" "}
-          <span
-            className="text-blue-400 cursor-pointer"
-            onClick={() => setCurrentPage("register")}
-          >
-            สมัครสมาชิก
-          </span>
-        </p>
-      </div>
-    );
-  };
-
-  const RegisterPage = () => {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-
-    return (
-      <div className="flex flex-col items-center justify-center h-screen text-white">
-        <h1 className="text-3xl font-bold mb-4">สมัครสมาชิก Ani Life</h1>
-        <input
-          className="p-2 mb-2 rounded bg-gray-800 w-64"
-          placeholder="ชื่อผู้ใช้"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <input
-          type="password"
-          className="p-2 mb-4 rounded bg-gray-800 w-64"
-          placeholder="รหัสผ่าน"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button
-          onClick={() => handleRegister(username, password)}
-          className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded mb-2"
-        >
-          สมัครสมาชิก
-        </button>
-        <p>
-          มีบัญชีอยู่แล้ว?{" "}
-          <span
-            className="text-blue-400 cursor-pointer"
-            onClick={() => setCurrentPage("login")}
-          >
-            กลับไปเข้าสู่ระบบ
-          </span>
-        </p>
-      </div>
-    );
-  };
-
+  // ระบบการเปลี่ยนหน้า
   const showPage = () => {
     switch (currentPage) {
+      // --- 4. ปรับ CASE ให้เรียกใช้คอมโพเนนต์ที่ IMPORT เข้ามา ---
       case "login":
-        return <LoginPage />;
+        return (
+          <Login 
+            onLogin={handleLoginSuccess} // ส่งฟังก์ชันเมื่อล็อกอินสำเร็จ
+            goToRegister={goToRegister}  // ส่งฟังก์ชันสำหรับไปหน้า Register
+          />
+        );
       case "register":
-        return <RegisterPage />;
+        return (
+          <Register 
+            goToLogin={goToLogin} // ส่งฟังก์ชันสำหรับกลับไปหน้า Login
+          />
+        );
+      // ------------------------------------
+
       case "home":
         return <Home animeList={animeList} onSelect={(a) => goToDetail(a, "home")} />;
       case "browse":
@@ -260,13 +218,23 @@ function App() {
     }
   };
 
+  // Route Guard (เหมือนเดิม)
   if (
     !currentUser &&
     ["home", "browse", "admin", "mylist", "schedule"].includes(currentPage)
   ) {
-    return <LoginPage />;
+    // บังคับกลับไปหน้า Login
+    // (เนื่องจาก showPage() จะ return Login อยู่แล้วเมื่อ currentPage = "login"
+    // การใช้ return <Login ... /> ที่นี่จะปลอดภัยกว่า)
+     return (
+        <Login 
+          onLogin={handleLoginSuccess}
+          goToRegister={goToRegister}
+        />
+      );
   }
 
+  // Main Render (เหมือนเดิม)
   return (
     <div className="min-h-screen bg-gray-900">
       {currentUser && (
