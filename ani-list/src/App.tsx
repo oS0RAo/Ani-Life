@@ -70,7 +70,6 @@ function App() {
     } catch (err) {
       console.error("Failed to seed admin user:", err);
     }
-    // ------------------------------------
 
   }, []); // [] = ทำงานครั้งเดียว
 
@@ -121,14 +120,14 @@ function App() {
     setCurrentPage("detail");
   };
 
-  // --- สร้างฟังก์ชันใหม่สำหรับส่งให้ Pages ---
+  // สร้างฟังก์ชันใหม่สำหรับส่งให้ Pages
 
   // ฟังก์ชันนี้จะถูกเรียกโดย Login.tsx "หลังจาก" ล็อกอินสำเร็จ
   const handleLoginSuccess = (user: User) => {
     setCurrentUser(user); // ตั้งค่า State ผู้ใช้
     setCurrentPage("home"); // เปลี่ยนหน้าไป Home
 
-    // โหลด Favorite (Logic นี้ย้ายมาจาก handleLogin เดิม)
+    // โหลด Favorite
     const allUserFavorites = JSON.parse(localStorage.getItem("userFavorites") || "{}");
     const favIds = allUserFavorites[user.username] || [];
     const updatedAnimeList = animeList.map((a) => ({
@@ -148,7 +147,6 @@ function App() {
     setCurrentPage("register");
   };
   
-  // ฟังก์ชัน handleLogout (เหมือนเดิม)
   const handleLogout = () => {
     setCurrentUser(null);
     localStorage.removeItem("currentUser");
@@ -205,7 +203,6 @@ function App() {
     }
   };
 
-  // Route Guard (เหมือนเดิม)
   if (
     !currentUser &&
     ["home", "browse", "admin", "mylist", "schedule"].includes(currentPage)
@@ -220,7 +217,6 @@ function App() {
       );
   }
 
-  // Main Render (เหมือนเดิม)
   return (
     <div className="min-h-screen bg-gray-900">
       {currentUser && (
