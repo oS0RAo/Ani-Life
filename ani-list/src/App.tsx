@@ -6,15 +6,12 @@ import Detail from "./pages/Detail";
 import MyList from "./pages/MyList";
 import Admin from "./pages/Admin";
 import Schedule from "./pages/Schedule";
-// --- 1. IMPORT เพจและ Type ที่จำเป็น ---
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import type { User } from "./types/user"; 
-// ------------------------------------
 import type { Anime } from "./types/anime";
 import { sampleAnime } from "./data/sampleAnime";
 
-// --- (ลบ Interface User ภายใน App.tsx ออก เพราะ Import มาแล้ว) ---
 
 function App() {
   // สถานะสำหรับ "การเปลี่ยนหน้า"
@@ -62,9 +59,7 @@ function App() {
       localStorage.setItem("animeList", JSON.stringify(sampleAnime));
     }
 
-    // --- 3. ย้าย LOGIC SEED ADMIN มาไว้ที่นี่ ---
-    // (Logic นี้เคยอยู่ใน handleLogin แต่ Login.tsx ภายนอกไม่มี Logic นี้
-    //  จึงย้ายมาไว้ใน useEffect ที่ทำงานครั้งเดียวตอนเปิดแอป)
+    //  ย้ายมาไว้ใน useEffect ที่ทำงานครั้งเดียวตอนเปิดแอป)
     try {
       const users: User[] = JSON.parse(localStorage.getItem("users") || "[]");
       if (!users.find((u) => u.username === "admin")) {
@@ -79,7 +74,7 @@ function App() {
 
   }, []); // [] = ทำงานครั้งเดียว
 
-  // ตรวจสอบ Session ผู้ใช้ (เหมือนเดิม)
+  // ตรวจสอบ Session ผู้ใช้
   useEffect(() => {
     const savedUser = localStorage.getItem("currentUser");
     if (savedUser) {
@@ -88,14 +83,14 @@ function App() {
     }
   }, []);
 
-  // บันทึก animeList (เหมือนเดิม)
+  // บันทึก animeLis
   useEffect(() => {
     if (animeList.length > 0) {
       localStorage.setItem("animeList", JSON.stringify(animeList));
     }
   }, [animeList]);
 
-  // ฟังก์ชัน toggleFavorite (เหมือนเดิม)
+  // ฟังก์ชัน toggleFavorite
   const toggleFavorite = (anime: Anime) => {
     if (!currentUser) return;
 
@@ -116,7 +111,7 @@ function App() {
     setAnimeList(updatedAnimeList);
   };
 
-  // ฟังก์ชัน goToDetail (เหมือนเดิม)
+  // ฟังก์ชัน goToDetail
   const goToDetail = (
     a: Anime,
     from: Exclude<typeof currentPage, "detail" | "admin" | "login" | "register">
@@ -126,17 +121,14 @@ function App() {
     setCurrentPage("detail");
   };
 
-  // --- (ลบ handleRegister และ handleLogin เก่าออก) ---
-  // (เพราะ Logic การค้นหา/บันทึก user อยู่ใน Login.tsx และ Register.tsx แล้ว)
-
   // --- สร้างฟังก์ชันใหม่สำหรับส่งให้ Pages ---
 
   // ฟังก์ชันนี้จะถูกเรียกโดย Login.tsx "หลังจาก" ล็อกอินสำเร็จ
   const handleLoginSuccess = (user: User) => {
-    setCurrentUser(user); // 1. ตั้งค่า State ผู้ใช้
-    setCurrentPage("home"); // 2. เปลี่ยนหน้าไป Home
+    setCurrentUser(user); // ตั้งค่า State ผู้ใช้
+    setCurrentPage("home"); // เปลี่ยนหน้าไป Home
 
-    // 3. โหลด Favorite (Logic นี้ย้ายมาจาก handleLogin เดิม)
+    // โหลด Favorite (Logic นี้ย้ายมาจาก handleLogin เดิม)
     const allUserFavorites = JSON.parse(localStorage.getItem("userFavorites") || "{}");
     const favIds = allUserFavorites[user.username] || [];
     const updatedAnimeList = animeList.map((a) => ({
@@ -163,13 +155,9 @@ function App() {
     setCurrentPage("login");
   };
 
-  // --- 2. ลบ const LoginPage และ RegisterPage ภายในนี้ออก ---
-  // ( ... โค้ดที่นิยาม LoginPage และ RegisterPage ถูกลบ ... )
-
   // ระบบการเปลี่ยนหน้า
   const showPage = () => {
     switch (currentPage) {
-      // --- 4. ปรับ CASE ให้เรียกใช้คอมโพเนนต์ที่ IMPORT เข้ามา ---
       case "login":
         return (
           <Login 
@@ -183,7 +171,6 @@ function App() {
             goToLogin={goToLogin} // ส่งฟังก์ชันสำหรับกลับไปหน้า Login
           />
         );
-      // ------------------------------------
 
       case "home":
         return <Home animeList={animeList} onSelect={(a) => goToDetail(a, "home")} />;
@@ -225,7 +212,6 @@ function App() {
   ) {
     // บังคับกลับไปหน้า Login
     // (เนื่องจาก showPage() จะ return Login อยู่แล้วเมื่อ currentPage = "login"
-    // การใช้ return <Login ... /> ที่นี่จะปลอดภัยกว่า)
      return (
         <Login 
           onLogin={handleLoginSuccess}
