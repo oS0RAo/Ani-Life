@@ -37,7 +37,6 @@ function App() {
   useEffect(() => {
     document.title = "Ani Life";
     try {
-      // (ส่วนโหลด animeList ... เหมือนเดิม)
       const saved = localStorage.getItem("animeList");
       if (saved) {
         const parsed: Anime[] = JSON.parse(saved);

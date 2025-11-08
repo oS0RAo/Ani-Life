@@ -46,7 +46,12 @@ export default function AdminForm({
   resetForm,
 }: AdminFormProps) {
   // ฟังก์ชั่นสำหรับสถานะสำหรับเก็บข้อมูลแพลตฟอร์มใหม่ที่กำลังจะถูกเพิ่ม
-  const [newPlatform, setNewPlatform] = useState({ name: "", customName: "", episodes: [] as any[] });
+  const [newPlatform, setNewPlatform] = useState({
+     name: "", 
+     customName: "", 
+     episodes: [] as any[],
+     logoUrl: ""
+    });
   // ฟังก์ชั่นสำหรับสถานะสำหรับเก็บข้อมูลตอนใหม่ที่กำลังจะถูกเพิ่มเข้าไปใน newPlatform ชั่วคราว
   const [newEpisode, setNewEpisode] = useState({ title: "", url: "" });
 
@@ -74,7 +79,7 @@ export default function AdminForm({
     const updated = [...(newAnime.platforms || []), { ...newPlatform, name }];
     setNewAnime({ ...newAnime, platforms: updated });
     // รีเซ็ตสถานะของ newPlatform
-    setNewPlatform({ name: "", customName: "", episodes: [] });
+    setNewPlatform({ name: "", customName: "", episodes: [] as any[], logoUrl: "" });
   };
 
   // ฟังก์ชันสำหรับเพิ่มตอนเข้าไปในแพลตฟอร์มที่มีอยู่แล้ว
@@ -349,6 +354,12 @@ export default function AdminForm({
             value={newPlatform.customName}
             onChange={(e) => setNewPlatform((p) => ({ ...p, customName: e.target.value }))} />
         )}
+
+        <input className="p-2 rounded bg-gray-800 w-full mb-2"
+          placeholder="ลิงก์โลโก้ (URL)"
+          value={newPlatform.logoUrl}
+          onChange={(e) => setNewPlatform((p) => ({ ...p, logoUrl: e.target.value }))} 
+        />
 
         {/* ฟอร์มย่อยสำหรับกรอกข้อมูลตอนที่จะเพิ่มเข้าในแพลตฟอร์มใหม่ */}
         <div className="bg-gray-800 p-3 rounded mb-3">

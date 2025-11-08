@@ -11,6 +11,7 @@ export interface Episode {
 export interface Platform {
   name: string;         // ชื่อแพลตฟอร์ม
   episodes: Episode[];  // รายการตอน (Array ของ Episode) ที่มีในแพลตฟอร์มนี้
+  logoUrl?: string;
 }
 
 // กำหนดโครงสร้างของ "ตัวละคร"

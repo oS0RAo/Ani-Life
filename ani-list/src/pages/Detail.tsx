@@ -169,28 +169,27 @@ export default function Detail({ anime, goBack, toggleFavorite }: DetailProps) {
               <>
                 {/* ปุ่มเลือกแพลตฟอร์ม */}
                 <div className="flex flex-wrap justify-center gap-4 mb-6">
-                  {/* วนลูปแสดงปุ่มสำหรับทุกแพลตฟอร์ม */}
-                  {currentAnime.platforms.map((p) => (
-                    <button
+                  {currentAnime.platforms.map((p) => {
+                    // สร้างตัวแปร logo
+                    // พยายามใช้ 'p.logoUrl' (ที่กรอกใน Admin Form) ก่อน
+                    // ถ้าไม่มี (||) ค่อยไปใช้ 'platformLogos[p.name]'
+                    const logo = p.logoUrl || platformLogos[p.name];
+                    // return JSX ของปุ่ม
+                    return (
+                      <button
                       key={p.name}
                       onClick={() =>
-                        // ตั้งค่าแพลตฟอร์มที่เลือก ถ้าคลิกซ้ำจะยกเลิกการเลือก
                         setSelectedPlatform(selectedPlatform === p.name ? null : p.name)
                       }
-                      // Tailwind เปลี่ยนสไตล์ตาม 'selectedPlatform'
                       className={`flex items-center gap-2 px-4 py-2 rounded-md transition border shadow-sm ${
                         selectedPlatform === p.name
-                          ? "bg-blue-600 border-blue-400" // สไตล์เมื่อถูกเลือก
-                          : "bg-[#2b2d3e] border-transparent hover:bg-[#3c4060]" // สไตล์ปกติ
-                      }`}
-                    >
-                      {/* แสดงโลโก้ (ถ้ามีใน platformLogos) */}
-                      {platformLogos[p.name] && (
-                        <img
-                          src={platformLogos[p.name]}
-                          alt={p.name}
-                          className="w-6 h-6 object-contain"
-                        />
+                          ? "bg-blue-600 border-blue-400"
+                          : "bg-[#2b2d3e] border-transparent hover:bg-[#3c4060]"
+                      }`}>
+
+                      {/* ใช้ตัวแปร 'logo' ที่เราสร้างขึ้นมาแสดงผล */}
+                      {logo && ( // ตรวจสอบว่า 'logo' มีค่า ไม่เป็น null/undefined/empty string
+                        <img src={logo} alt={p.name} className="w-6 h-6 object-contain" /> // object-contain ป้องกันรูปสเกลเพี้ยน
                       )}
                       {/* แสดงชื่อแพลตฟอร์มและจำนวนตอน */}
                       <span className="font-medium text-blue-300">
@@ -199,13 +198,12 @@ export default function Detail({ anime, goBack, toggleFavorite }: DetailProps) {
                           <span className="text-gray-300 text-sm">
                             ({p.episodes.length} ตอน)
                           </span>
-                        ) : (
-                          ""
-                        )}
+                        ) : ("")}
                       </span>
                     </button>
-                  ))}
-                </div>
+                  );
+                  })}
+                  </div>
 
                 {/* แสดงตอนของแพลตฟอร์มที่เลือก */}
                 {selectedPlatform ? (
