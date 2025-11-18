@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { Anime } from "../types/anime";
+import AnimeCard from "../components/AnimeCard";
 
 interface ScheduleProps {
   // รายการอนิเมะทั้งหมดรับมาจาก App.tsx
@@ -85,18 +86,11 @@ export default function Schedule({ animeList, onSelect }: ScheduleProps) {
             // เมื่อคลิก ให้เรียกฟังก์ชัน onSelect
             onClick={() => onSelect(anime)}
           >
-            <img
-              src={anime.image}
-              alt={anime.title}
-              className="w-full h-48 object-cover"
+            <AnimeCard
+              key={anime.id}
+              anime={anime}
+              onSelect={onSelect}
             />
-            <div className="p-2">
-              <h2 className="font-semibold text-white">{anime.title}</h2>
-              {/* แสดงแนวและวันออกอากาศ */}
-              <p className="text-gray-400 text-sm">
-                {anime.genre} • {anime.broadcastDay}
-              </p>
-            </div>
           </div>
         ))}
 

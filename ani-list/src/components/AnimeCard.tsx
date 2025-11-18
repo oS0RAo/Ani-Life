@@ -8,10 +8,14 @@ interface Props {
   onSelect: (anime: Anime) => void;
 }
 
+// ==============================
+//              UI
+// ==============================
+
 export default function AnimeCard({ anime, onSelect }: Props) {
   return (
     // เมื่อมีการคลิก onClick จะเรียกใช้ฟังก์ชัน onSelect โดยส่งข้อมูลอนิเมะปัจจุบันเข้าไป
-    <div onClick={() => onSelect(anime)} className="bg-white rounded-lg shadow hover:shadow-lg transition cursor-pointer">
+    <div onClick={() => onSelect(anime)} className="bg-gray-800 rounded-lg shadow cursor-pointer hover:scale-105 transition transform overflow-hidden">
 
       {/* ส่วนรูปภาพปกอนิเมะ */}
       <img 
@@ -24,15 +28,15 @@ export default function AnimeCard({ anime, onSelect }: Props) {
       />
       
       {/* ส่วนเนื้อหาของการ์ด */}
-      <div className="p-3">
+      <div className="p-2">
         {/* ชื่อเรื่องอนิเมะ */}
-        <h3 className="font-semibold text-lg">{anime.title}</h3>
-        
-        {/* แนว และปีที่ออกฉาย */}
-        <p className="text-sm text-gray-500">{anime.genre} • {anime.year}</p>
-        
+        <h2 className="font-semibold text-white">{anime.title}</h2>
+        {/* แนว */}
+        <p className="text-gray-400 text-sm">{anime.genre}</p>
         {/* คะแนน (Rating) */}
         <p className="text-yellow-600 font-medium mt-1"> ⭐ {anime.rating}</p>
+        {/* ปีที่ออกฉาย */}
+        <p className="text-sm text-gray-500">{anime.genre} • {anime.year}</p>
       </div>
     </div>
   );

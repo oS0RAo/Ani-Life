@@ -267,7 +267,7 @@ export default function AdminForm({
       {/* แสดงส่วนนี้ถ้ามีแพลตฟอร์มแล้ว */}
       {newAnime.platforms.length > 0 && (
         <div className="mt-6 bg-gray-700 p-4 rounded-lg">
-          <h3 className="font-semibold text-yellow-300 mb-2">🧩 แพลตฟอร์มที่มีอยู่</h3>
+          <h3 className="font-semibold text-yellow-300 mb-2">แพลตฟอร์มที่มีอยู่</h3>
 
           {/* วนลูปแสดงแต่ละแพลตฟอร์ม (p) */}
           {newAnime.platforms.map((p, i) => (

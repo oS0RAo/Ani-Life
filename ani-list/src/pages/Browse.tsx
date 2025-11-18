@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { Anime } from "../types/anime";
+import AnimeCard from "../components/AnimeCard";
 
 interface BrowseProps {
   // รายการอนิเมะทั้งหมดที่ได้รับมาจากcompnentแม่
@@ -45,17 +46,15 @@ export default function Browse({ animeList, onSelect }: BrowseProps) {
             key={anime.id} // Key สำหรับ React List Render
             // เมื่อคลิกที่ card ให้เรียกฟังก์ชัน onSelect ที่ได้รับมา
             onClick={() => onSelect(anime)}
-            // เพิ่ม animation เมื่อนำเมาส์ไปชี้
-            className="bg-gray-800 p-4 rounded-lg hover:scale-105 transition cursor-pointer"
+            // animation เมื่อนำเมาส์ไปชี้
+            className="bg-gray-800 rounded-lg overflow-hidden cursor-pointer hover:scale-105 transition transform"
           >
             {/* รูปภาพปกอนิเมะ */}
-            <img 
-              src={anime.image} 
-              alt={anime.title} 
-              className="rounded-md mb-3 w-full h-60 object-cover" 
-            />
-            {/* ชื่อเรื่องอนิเมะ */}
-            <h3 className="text-lg font-semibold">{anime.title}</h3>
+            <AnimeCard
+              key={anime.id}
+              anime={anime}
+              onSelect={onSelect}
+             />
           </div>
         ))}
       </div>

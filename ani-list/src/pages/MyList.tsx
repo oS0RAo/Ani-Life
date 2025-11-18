@@ -1,4 +1,5 @@
 import type { Anime } from "../types/anime";
+import AnimeCard from "../components/AnimeCard";
 
 interface MyListProps {
   // รายการอนิเมะที่ผู้ใช้เพิ่มไว้ใน My List โดย component นี้รับลิสต์ที่กรองแล้วจาก App.tsx
@@ -28,19 +29,11 @@ export default function MyList({ animeList, onSelect }: MyListProps) {
               onClick={() => onSelect(anime)}
             >
               {/* รูปภาพปก */}
-              <img
-                src={anime.image}
-                alt={anime.title}
-                className="w-full h-48 object-cover"
+              <AnimeCard
+                key={anime.id}
+                anime={anime}
+                onSelect={onSelect}
               />
-              {/* ข้อมูล (ชื่อเรื่อง, แนว) */}
-              <div className="p-2">
-                {/* 'truncate' ใช้ตัดข้อความที่ยาวเกินไปให้แสดง ... */}
-                <h2 className="font-semibold text-white truncate">
-                  {anime.title}
-                </h2>
-                <p className="text-gray-400 text-sm">{anime.genre}</p>
-              </div>
             </div>
           ))}
         </div>

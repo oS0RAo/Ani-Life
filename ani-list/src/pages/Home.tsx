@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { Anime } from "../types/anime";
 import SeasonSelector from "../components/SeasonSelector";
+import AnimeCard from "../components/AnimeCard";
 
 interface HomeProps {
   animeList: Anime[];
@@ -43,16 +44,11 @@ export default function Home({ animeList, onSelect }: HomeProps) {
             onClick={() => onSelect(anime)}
           >
             {/* รูปภาพปก */}
-            <img
-              src={anime.image}
-              alt={anime.title}
-              className="w-full h-48 object-cover"
-            />
-            {/* ส่วนของข้อมูล ชื่อเรื่อง, แนว */}
-            <div className="p-2">
-              <h2 className="font-semibold text-white">{anime.title}</h2>
-              <p className="text-gray-400 text-sm">{anime.genre}</p>
-            </div>
+            <AnimeCard // ⭐️ [แทนที่] ใช้ AnimeCard แทน Div เดิม
+            key={anime.id}
+            anime={anime}
+            onSelect={onSelect}
+          />
           </div>
         ))}
 
