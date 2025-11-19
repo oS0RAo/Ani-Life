@@ -46,8 +46,8 @@ export default function Detail({ anime, goBack, toggleFavorite }: DetailProps) {
 
   // URL โลโก้ของแพลตฟอร์มต่างๆ
   const platformLogos: Record<string, string> = {
-    Netflix: "https://images.ctfassets.net/4cd45et68cgf/Rx83JoRDMkYNlMC9MKzcB/2b14d5a59fc3937afd3f03191e19502d/Netflix-Symbol.png?w=700&h=456",
-    Crunchyroll: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROfQX7B766poqHirN-xz6-W5xK1X4tv9F2oQ&s",
+    "Netflix": "https://images.ctfassets.net/4cd45et68cgf/Rx83JoRDMkYNlMC9MKzcB/2b14d5a59fc3937afd3f03191e19502d/Netflix-Symbol.png?w=700&h=456",
+    "Crunchyroll": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROfQX7B766poqHirN-xz6-W5xK1X4tv9F2oQ&s",
     "Muse Thailand":
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfG5uBcdcUA7q1c5HX2fqc6c89Yb2q06ME0bWhDKypmcLrYgDMV_c9b6UxbEPjabw35Sc&usqp=CAU",
     "Disney+ Hotstar":

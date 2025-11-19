@@ -134,8 +134,7 @@ export default function AdminForm({
     if (editingCharacterId) {
       // ในโหมดแก้ไขค้นหาตัวละครด้วย ID แล้วอัปเดต
       updatedCharacters = updatedCharacters.map((c) =>
-        c.id === editingCharacterId ? { ...newCharacter, id: editingCharacterId } : c
-      );
+        c.id === editingCharacterId ? { ...newCharacter, id: editingCharacterId } : c);
       alert("💾 บันทึกการแก้ไขตัวละครแล้ว");
     } else {
       // เพิ่มตัวละครใหม่ด้วย ID ที่สร้างจาก Date.now()

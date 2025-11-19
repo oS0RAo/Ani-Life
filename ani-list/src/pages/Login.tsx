@@ -1,5 +1,6 @@
 // src/pages/Login.tsx
 import React, { useState } from "react";
+
 // นำเข้า User interface จาก /types/user.ts เพื่อใช้กำหนดโครงสร้างข้อมูล
 import type { User } from "../types/user";
 
@@ -10,7 +11,7 @@ export default function Login({
   // onLogin คือฟังก์ชันที่รับมาจาก App.tsx เมื่อล็อกอินสำเร็จ เราจะเรียกฟังก์ชันนี้และส่งข้อมูล user ที่พบกลับไป
   onLogin: (user: User) => void;
   
-  // goToRegister: คือฟังก์ชันที่รับมาจาก App.tsx ใช้สำหรับบอก App.tsx ให้เปลี่ยนหน้าไปที่ "register"
+  // goToRegister คือฟังก์ชันที่รับมาจาก App.tsx ใช้สำหรับบอก App.tsx ให้เปลี่ยนหน้าไปที่ "register"
   goToRegister: () => void;
 }) {
   
@@ -36,7 +37,7 @@ export default function Login({
     // ถ้า 'found' เป็น undefined (ไม่พบผู้ใช้)
     if (!found) return alert("ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
     
-    // ล็Log in สำเร็จ บันทึกข้อมูลผู้ใช้ที่พบลงใน localStorage ("currentUser") เพื่อสร้าง Session
+    // Log in สำเร็จ บันทึกข้อมูลผู้ใช้ที่พบลงใน localStorage ("currentUser") เพื่อสร้าง Session
     localStorage.setItem("currentUser", JSON.stringify(found));
     
     // เรียกฟังก์ชัน onLogin ที่ App.tsx ส่งมาเพื่ออัปเดต state หลักของแอป
@@ -76,7 +77,7 @@ export default function Login({
 
       {/* ลิงก์สำหรับไปหน้าสมัครสมาชิก */}
       <p className="text-center text-sm mt-4">
-        ยังไม่มีบัญชี?{" "} {/* (แก้ Text จาก "มีบัญชีอยู่แล้ว?" เป็น "ยังไม่มีบัญชี?") */}
+        ยังไม่มีบัญชี?{" "}
         <button
           className="text-green-400 underline"
           onClick={goToRegister} // เมื่อคลิก ให้เรียกฟังก์ชัน goToRegister

@@ -5,7 +5,7 @@ export const sampleAnime: Anime[] = [
     id: 1,
     title: "Attack on Titan",
     year: 2013,
-    genre: "Action, Drama",
+    genre: "Action",
     rating: 9.0,
     season: "Winter",
     broadcastDay: "Sunday",
@@ -61,17 +61,20 @@ export const sampleAnime: Anime[] = [
       {
         name: "Eren Yeager",
         role: "พระเอก / ผู้ถือครองพลังไททันจู่โจม",
-        image: "https://cdn.myanimelist.net/images/characters/10/284121.jpg",
+        image: "https://pm1.aminoapps.com/6525/22c678780ade1749016a35cafe9f89224442445a_hq.jpg",
+        id: 0
       },
       {
         name: "Mikasa Ackerman",
         role: "เพื่อนร่วมทีม / นักรบผู้แข็งแกร่ง",
-        image: "https://cdn.myanimelist.net/images/characters/2/284123.jpg",
+        image: "https://i1.sndcdn.com/artworks-KzmlSku4ygWTfyfx-2jkw0A-t500x500.jpg",
+        id: 0
       },
       {
         name: "Armin Arlert",
         role: "เพื่อนสนิท / นักวางแผน",
-        image: "https://cdn.myanimelist.net/images/characters/3/284120.jpg",
+        image: "https://i.pinimg.com/736x/60/cb/1e/60cb1e819f8953ad3121142840e47d6f.jpg",
+        id: 0
       },
     ],
   },
@@ -80,7 +83,7 @@ export const sampleAnime: Anime[] = [
     id: 2,
     title: "Demon Slayer: Kimetsu no Yaiba",
     year: 2019,
-    genre: "Action, Supernatural",
+    genre: "Action",
     rating: 8.7,
     season: "Spring",
     broadcastDay: "Saturday",
@@ -123,12 +126,14 @@ export const sampleAnime: Anime[] = [
       {
         name: "Tanjiro Kamado",
         role: "พระเอก / นักล่าปีศาจ",
-        image: "https://cdn.myanimelist.net/images/characters/13/401271.jpg",
+        image: "https://us.oricon-group.com/upimg/sns/4000/4438/img1200/tanjiro-kamado-6.jpg",
+        id: 0
       },
       {
         name: "Nezuko Kamado",
         role: "น้องสาว / ปีศาจผู้มีจิตใจมนุษย์",
-        image: "https://cdn.myanimelist.net/images/characters/10/401272.jpg",
+        image: "https://anibase.net/files/877d03ad6ee010c6698a621e454e1667",
+        id: 0
       },
     ],
   },
@@ -137,7 +142,7 @@ export const sampleAnime: Anime[] = [
     id: 3,
     title: "Jujutsu Kaisen",
     year: 2020,
-    genre: "Action, Fantasy",
+    genre: "Action",
     rating: 8.8,
     season: "Fall",
     broadcastDay: "Friday",
@@ -145,7 +150,7 @@ export const sampleAnime: Anime[] = [
     image: "https://cdn.myanimelist.net/images/anime/1171/109222.jpg",
     description:
       "ยูจิ อิตาโดริ เด็กหนุ่มผู้มีพลังร่างกายมหาศาล กลืนคำสาปแห่งสุคุนะ และกลายเป็นภาชนะที่อันตรายที่สุดในโลกไสยเวท",
-    trailerUrl: "https://www.youtube.com/embed/f8JrZ7Q_p-8",
+    trailerUrl: "https://www.youtube.com/embed/pkKu9hLT-t8?si=ZZxFX_nbWXdWj19y",
 
     platforms: [
       {
@@ -180,17 +185,20 @@ export const sampleAnime: Anime[] = [
       {
         name: "Yuji Itadori",
         role: "พระเอก / ภาชนะของสุคุนะ",
-        image: "https://cdn.myanimelist.net/images/characters/8/423716.jpg",
+        image: "https://upload.wikimedia.org/wikipedia/it/thumb/7/74/Yuji_Itadori.jpg/1200px-Yuji_Itadori.jpg",
+        id: 0
       },
       {
         name: "Megumi Fushiguro",
         role: "เพื่อนร่วมทีม / ผู้ใช้สัตว์อัญเชิญ",
-        image: "https://cdn.myanimelist.net/images/characters/4/423717.jpg",
+        image: "https://shapes.inc/api/public/avatar/megumifushiguroo",
+        id: 0
       },
       {
         name: "Satoru Gojo",
-        role: "อาจารย์ / จอมเวทระดับสูงสุด",
-        image: "https://cdn.myanimelist.net/images/characters/16/423718.jpg",
+        role: "อาจารย์ / นักคุณไสยระดับพิเศษ",
+        image: "https://us.oricon-group.com/upimg/sns/2000/2821/img1200/Satoru-Gojo-from-jjk-EP3%20(8).jpg",
+        id: 0
       },
     ],
   },

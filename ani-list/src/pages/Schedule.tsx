@@ -82,6 +82,7 @@ export default function Schedule({ animeList, onSelect }: ScheduleProps) {
         {filteredAnime.map((anime) => (
           <div
             key={anime.id}
+            // animation เมื่อนำเมาส์ไปชี้
             className="bg-gray-800 rounded-lg overflow-hidden cursor-pointer hover:scale-105 transition transform"
             // เมื่อคลิก ให้เรียกฟังก์ชัน onSelect
             onClick={() => onSelect(anime)}

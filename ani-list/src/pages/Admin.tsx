@@ -135,27 +135,27 @@ export default function Admin({ animeList, setAnimeList }: {
         <select className="p-2 rounded bg-gray-700"
           value={filterGenre}
           onChange={(e) => setFilterGenre(e.target.value)}>
-          <option value="">🎭 ทุกแนว</option>
+          <option value="">All</option>
           {GENRES.map((g) => <option key={g}>{g}</option>)}
         </select>
         {/* Dropdown กรองฤดูกาล (ผูกค่ากับ filterSeason) */}
         <select className="p-2 rounded bg-gray-700"
           value={filterSeason}
           onChange={(e) => setFilterSeason(e.target.value)}>
-          <option value="">🍁 ทุกซีซัน</option>
+          <option value="">All</option>
           {SEASONS.map((s) => <option key={s}>{s}</option>)}
         </select>
         {/* Dropdown กรองวันออกอากาศ (ผูกค่ากับ filterDay) */}
         <select className="p-2 rounded bg-gray-700"
           value={filterDay}
           onChange={(e) => setFilterDay(e.target.value)}>
-          <option value="">📅 ทุกวันออกอากาศ</option>
+          <option value="">All</option>
           {BROADCAST_DAYS.map((d) => <option key={d}>{d}</option>)}
         </select>
       </div>
 
       {/* รายการอนิเมะ */}
-      <h2 className="text-xl font-semibold mb-3">📚 รายการทั้งหมด ({filteredAnime.length})</h2>
+      <h2 className="text-xl font-semibold mb-3">รายการทั้งหมด ({filteredAnime.length})</h2>
       {filteredAnime.length === 0 ? (
         <p className="text-gray-400">ไม่พบอนิเมะที่ตรงกับการค้นหา</p>
       ) : (

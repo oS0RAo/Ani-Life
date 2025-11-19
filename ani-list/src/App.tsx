@@ -58,7 +58,6 @@ function App() {
       localStorage.setItem("animeList", JSON.stringify(sampleAnime));
     }
 
-    //  ย้ายมาไว้ใน useEffect ที่ทำงานครั้งเดียวตอนเปิดแอป)
     try {
       const users: User[] = JSON.parse(localStorage.getItem("users") || "[]");
       if (!users.find((u) => u.username === "admin")) {
@@ -207,7 +206,7 @@ function App() {
     ["home", "browse", "admin", "mylist", "schedule"].includes(currentPage)
   ) {
     // บังคับกลับไปหน้า Login
-    // (เนื่องจาก showPage() จะ return Login อยู่แล้วเมื่อ currentPage = "login"
+    // เนื่องจาก showPage() จะ return Login อยู่แล้วเมื่อ currentPage = "login"
      return (
         <Login 
           onLogin={handleLoginSuccess}

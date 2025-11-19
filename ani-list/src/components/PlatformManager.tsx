@@ -281,7 +281,7 @@ export default function PlatformManager({
       {anime.platforms.length > 0 && (
         <div className="mt-4">
           <h4 className="text-blue-400 font-semibold mb-2">
-            📦 แพลตฟอร์มที่มีอยู่แล้ว
+            แพลตฟอร์มที่มีอยู่แล้ว
           </h4>
           <div className="space-y-2">
             {anime.platforms.map((p) => (
